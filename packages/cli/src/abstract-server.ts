@@ -158,7 +158,7 @@ export abstract class AbstractServer {
 			this.server = http.createServer(app);
 		}
 
-		const { port, listen_address: address } = Container.get(GlobalConfig);
+		const { port, listen_address: address, listen_socket: socket } = Container.get(GlobalConfig);
 
 		this.server.on('error', (error: Error & { code: string }) => {
 			if (error.code === 'EADDRINUSE') {
@@ -169,13 +169,22 @@ export abstract class AbstractServer {
 			}
 		});
 
-		await new Promise<void>((resolve) => this.server.listen(port, address, () => resolve()));
+		await new Promise<void>((resolve) => {
+			if (socket !== '') {
+				return this.server.listen(socket, () => resolve());
+			}
+			return this.server.listen(port, address, () => resolve());
+		});
 
 		this.externalHooks = Container.get(ExternalHooks);
 
 		await this.setupHealthCheck();
 
-		this.logger.info(`n8n ready on ${address}, port ${port}`);
+		if (socket !== '') {
+			this.logger.info(`n8n ready on ${socket}`);
+		} else {
+			this.logger.info(`n8n ready on ${address}, port ${port}`);
+		}
 	}
 
 	async start(): Promise<void> {

@@ -69,6 +69,10 @@ export class GlobalConfig {
 	@Env('N8N_LISTEN_ADDRESS')
 	listen_address: string = '0.0.0.0';
 
+	/** Unix domain socket n8n should listen on */
+	@Env('N8N_LISTEN_SOCKET')
+	listen_socket: string = '';
+
 	/** HTTP Protocol via which n8n can be reached */
 	@Env('N8N_PROTOCOL')
 	protocol: 'http' | 'https' = 'http';

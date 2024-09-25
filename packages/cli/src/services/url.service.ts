@@ -29,7 +29,14 @@ export class UrlService {
 	}
 
 	private generateBaseUrl(): string {
-		const { path, port, host, protocol } = this.globalConfig;
+		const { path, port, host, protocol, listen_socket: socket } = this.globalConfig;
+
+		if (socket !== '') {
+			if (protocol === 'http' || protocol === 'https') {
+				return `${protocol}://${host}${path}`;
+			}
+			return `${protocol}://${host}${path}`;
+		}
 
 		if ((protocol === 'http' && port === 80) || (protocol === 'https' && port === 443)) {
 			return `${protocol}://${host}${path}`;

@@ -27,6 +27,7 @@ describe('GlobalConfig', () => {
 		host: 'localhost',
 		port: 5678,
 		listen_address: '0.0.0.0',
+		listen_socket: '',
 		protocol: 'http',
 		database: {
 			logging: {
